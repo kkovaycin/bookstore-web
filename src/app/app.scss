@@ -1,0 +1,94 @@
+$primary-color: #5b3a29;
+$secondary-color: #f4eee8;
+$text-color: #28221f;
+$white: #ffffff;
+$danger-color: #b42318;
+
+* {
+  box-sizing: border-box;
+}
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: $secondary-color;
+  color: $text-color;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  width: min(1100px, 90%);
+  margin: 0 auto;
+}
+
+.header {
+  padding: 32px 0;
+  background-color: $primary-color;
+  color: $white;
+
+  h1 {
+    margin: 0 0 8px;
+    font-size: 36px;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+main {
+  padding-top: 32px;
+  padding-bottom: 48px;
+
+  h2 {
+    margin-bottom: 24px;
+  }
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.product-card {
+  padding: 22px;
+  background-color: $white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 8%);
+
+  h3 {
+    margin: 12px 0;
+  }
+
+  .category {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: $secondary-color;
+    border-radius: 20px;
+    font-size: 13px;
+  }
+
+  .explanation {
+    min-height: 44px;
+    line-height: 1.5;
+  }
+
+  .price {
+    display: block;
+    margin-top: 18px;
+    color: $primary-color;
+    font-size: 20px;
+  }
+}
+
+.message,
+.error-message {
+  padding: 16px;
+  background-color: $white;
+  border-radius: 8px;
+}
+
+.error-message {
+  color: $danger-color;
+}

@@ -1,0 +1,52 @@
+<header class="header">
+  <div class="container">
+    <h1>Bookstore</h1>
+    <p>Ürün kataloğu</p>
+  </div>
+</header>
+
+<main class="container">
+  <h2>Ürünler</h2>
+
+  <p *ngIf="loading()" class="message">
+    Ürünler yükleniyor...
+  </p>
+
+  <p *ngIf="errorMessage()" class="error-message">
+    {{ errorMessage() }}
+  </p>
+
+  <div
+    *ngIf="!loading() && products().length > 0"
+    class="product-grid"
+  >
+    <article
+      *ngFor="let product of products()"
+      class="product-card"
+    >
+      <span class="category">
+        {{ product.categoryName }}
+      </span>
+
+      <h3>{{ product.name }}</h3>
+
+      <p class="explanation">
+        {{ product.explanation }}
+      </p>
+
+      <strong class="price">
+        {{ product.price | number:'1.2-2' }} TL
+      </strong>
+    </article>
+  </div>
+
+  <p
+    *ngIf="
+      !loading() &&
+      !errorMessage() &&
+      products().length === 0
+    "
+  >
+    Henüz ürün bulunmuyor.
+  </p>
+</main>
