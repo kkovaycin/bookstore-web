@@ -2,6 +2,11 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, signal } from '@angular/core';
 
+import { CardModule } from 'primeng/card';
+import { MessageModule } from 'primeng/message';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TagModule } from 'primeng/tag';
+
 interface Product {
   id: number;
   name: string;
@@ -14,7 +19,7 @@ interface Product {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CardModule, MessageModule, ProgressSpinnerModule, TagModule],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -29,19 +34,18 @@ export class App implements OnInit {
     this.loadProducts();
   }
 
-  private loadProducts(): void {
-    this.http.get<Product[]>('http://localhost:8081/api/products').subscribe({
-      next: (data) => {
-        console.log('Gelen ürünler:', data);
+  loadProducts(): void {
+    this.loading.set(true);
+    this.errorMessage.set('');
 
-        this.products.set(data);
+    this.http.get<Product[]>('http://localhost:8081/api/products').subscribe({
+      next: (products) => {
+        this.products.set(products);
         this.loading.set(false);
       },
       error: (error) => {
-        console.error('Ürünler alınamadı:', error);
-
+        console.error('Ürünler yüklenirken hata oluştu:', error);
         this.errorMessage.set('Ürünler yüklenirken bir hata oluştu.');
-
         this.loading.set(false);
       },
     });
