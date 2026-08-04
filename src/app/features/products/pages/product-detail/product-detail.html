@@ -1,0 +1,171 @@
+<section class="product-detail">
+  <div class="product-detail__container">
+    <a
+      class="back-link"
+      routerLink="/products"
+    >
+      <span>←</span>
+      Back to products
+    </a>
+
+    @if (loading()) {
+      <app-loading />
+    } @else if (errorMessage()) {
+      <app-error-message
+        [message]="errorMessage()"
+      />
+    } @else if (product(); as currentProduct) {
+      <div class="product-detail__layout">
+        <div class="product-cover">
+          <div class="product-cover__decoration">
+            <span>
+              {{ currentProduct.categoryName }}
+            </span>
+
+            <strong>
+              {{ currentProduct.name }}
+            </strong>
+
+            <small>
+              Bookstore Collection
+            </small>
+          </div>
+        </div>
+
+        <div class="product-information">
+          <span class="product-information__category">
+            {{ currentProduct.categoryName }}
+          </span>
+
+          <h1>
+            {{ currentProduct.name }}
+          </h1>
+
+          <div class="product-information__rating">
+            <span class="stars">
+              ★★★★★
+            </span>
+
+            <span>
+              5.0 product rating
+            </span>
+          </div>
+
+          <p class="product-information__description">
+            {{
+              currentProduct.explanation ||
+              'No description is available for this product.'
+            }}
+          </p>
+
+          <div class="product-information__details">
+            <div>
+              <span>Product ID</span>
+              <strong>
+                #{{ currentProduct.id }}
+              </strong>
+            </div>
+
+            <div>
+              <span>Category</span>
+              <strong>
+                {{ currentProduct.categoryName }}
+              </strong>
+            </div>
+
+            <div>
+              <span>Availability</span>
+              <strong class="available">
+                In stock
+              </strong>
+            </div>
+          </div>
+
+          <div class="purchase-panel">
+            <div class="purchase-panel__price">
+              <span>Product price</span>
+
+              <strong>
+                {{
+                  currentProduct.price
+                    | currency:'TRY':'symbol':'1.2-2'
+                }}
+              </strong>
+            </div>
+
+            <div class="quantity-selector">
+              <span>Quantity</span>
+
+              <div class="quantity-selector__controls">
+                <button
+                  type="button"
+                  aria-label="Decrease quantity"
+                  (click)="decreaseQuantity()"
+                >
+                  −
+                </button>
+
+                <strong>
+                  {{ quantity() }}
+                </strong>
+
+                <button
+                  type="button"
+                  aria-label="Increase quantity"
+                  (click)="increaseQuantity()"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <button
+              class="add-cart-button"
+              type="button"
+              (click)="addToCart()"
+            >
+              Add to cart
+            </button>
+          </div>
+
+          <div class="product-information__benefits">
+            <div>
+              <span class="benefit-icon">✓</span>
+
+              <div>
+                <strong>Secure purchase</strong>
+                <small>
+                  Your transaction is protected.
+                </small>
+              </div>
+            </div>
+
+            <div>
+              <span class="benefit-icon">↺</span>
+
+              <div>
+                <strong>Easy returns</strong>
+                <small>
+                  Simple return process.
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (addedToCart()) {
+    <div class="success-toast">
+      <span>✓</span>
+
+      <div>
+        <strong>Product added to cart</strong>
+        <small>
+          Quantity: {{ quantity() }}
+        </small>
+      </div>
+    </div>
+  }
+</section>

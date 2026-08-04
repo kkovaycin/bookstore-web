@@ -1,0 +1,29 @@
+<article class="product-card">
+  <div class="product-card__image">
+    Book cover
+  </div>
+
+  <div class="product-card__content">
+    <span class="product-card__category">
+      {{ product().categoryName }}
+    </span>
+
+    <h3>
+      {{ product().name }}
+    </h3>
+
+    <p class="product-card__description">
+      {{ product().explanation || 'No description available.' }}
+    </p>
+
+    <div class="product-card__footer">
+      <strong>
+        {{ product().price | currency:'TRY':'symbol':'1.2-2' }}
+      </strong>
+
+      <a [routerLink]="['/products', product().id]">
+        View details
+      </a>
+    </div>
+  </div>
+</article>

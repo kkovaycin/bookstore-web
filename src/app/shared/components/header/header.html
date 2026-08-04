@@ -1,0 +1,53 @@
+<header class="header">
+  <div class="header__container">
+    <a
+      class="header__brand"
+      routerLink="/products"
+    >
+      <span class="header__logo">
+        B
+      </span>
+
+      <div>
+        <strong>Bookstore</strong>
+        <small>Online Book Shop</small>
+      </div>
+    </a>
+
+    <nav class="header__navigation">
+      <a
+        routerLink="/products"
+        routerLinkActive="active"
+      >
+        Products
+      </a>
+
+      <a
+        routerLink="/categories"
+        routerLinkActive="active"
+      >
+        Categories
+      </a>
+    </nav>
+
+    <div class="header__actions">
+      <a
+        class="login-link"
+        routerLink="/auth/login"
+      >
+        Login
+      </a>
+
+      <button
+        class="cart-button"
+        type="button"
+      >
+        <span>Cart</span>
+
+        <span class="cart-button__count">
+          0
+        </span>
+      </button>
+    </div>
+  </div>
+</header>

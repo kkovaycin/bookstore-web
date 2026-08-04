@@ -1,6 +1,0 @@
-export interface CreateProductRequest {
-  name: string;
-  price: number;
-  explanation: string;
-  categoryId: number;
-}

@@ -1,0 +1,216 @@
+<section class="hero">
+  <div class="hero__content">
+    <span class="hero__eyebrow">
+      Online bookstore
+    </span>
+
+    <h1>
+      Find the book that inspires your next chapter
+    </h1>
+
+    <p>
+      Browse our growing collection, explore categories
+      and discover your next favorite book.
+    </p>
+
+    <div class="hero__search">
+      <span class="hero__search-icon">
+        ⌕
+      </span>
+
+      <input
+        type="search"
+        placeholder="Search by book name, category or description"
+        aria-label="Search products"
+        [value]="searchText()"
+        (input)="updateSearchText($event)"
+      />
+    </div>
+  </div>
+
+  <div class="hero__decoration">
+    <div class="book book--one">
+      BOOK
+    </div>
+
+    <div class="book book--two">
+      STORE
+    </div>
+
+    <div class="book book--three">
+      READ
+    </div>
+  </div>
+</section>
+
+<section class="catalog">
+  <div class="catalog__header">
+    <div>
+      <span class="catalog__eyebrow">
+        Book catalog
+      </span>
+
+      <h2>
+        Explore our products
+      </h2>
+
+      <p>
+        Choose from the available books and categories.
+      </p>
+    </div>
+
+    <div class="catalog__result-count">
+      <strong>
+        {{ filteredProducts().length }}
+      </strong>
+
+      <span>
+        product results
+      </span>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <app-loading />
+  } @else if (errorMessage()) {
+    <app-error-message
+      [message]="errorMessage()"
+    />
+  } @else {
+    <div class="catalog__layout">
+      <aside class="filter-panel">
+        <div class="filter-panel__header">
+          <div>
+            <span>Filter products</span>
+            <h3>Categories</h3>
+          </div>
+
+          <button
+            type="button"
+            (click)="clearFilters()"
+          >
+            Clear
+          </button>
+        </div>
+
+        <label class="filter-option">
+          <input
+            type="radio"
+            name="category"
+            value="0"
+            [checked]="selectedCategoryId() === 0"
+            (change)="updateCategory($event)"
+          />
+
+          <span>
+            All categories
+          </span>
+
+          <strong>
+            {{ products().length }}
+          </strong>
+        </label>
+
+        @for (category of categories(); track category.id) {
+          <label class="filter-option">
+            <input
+              type="radio"
+              name="category"
+              [value]="category.id"
+              [checked]="selectedCategoryId() === category.id"
+              (change)="updateCategory($event)"
+            />
+
+            <span>
+              {{ category.name }}
+            </span>
+
+            <strong>
+              @let categoryProductCount =
+                products().filter(
+                  product => product.categoryId === category.id
+                ).length;
+
+              {{ categoryProductCount }}
+            </strong>
+          </label>
+        }
+
+        <div class="filter-panel__information">
+          <span class="filter-panel__information-icon">
+            i
+          </span>
+
+          <p>
+            Select a category to narrow down the displayed products.
+          </p>
+        </div>
+      </aside>
+
+      <div class="catalog__products">
+        <div class="catalog__toolbar">
+          <div>
+            @if (searchText()) {
+              <span>
+                Search results for
+                <strong>
+                  “{{ searchText() }}”
+                </strong>
+              </span>
+            } @else {
+              <span>
+                Showing all available products
+              </span>
+            }
+          </div>
+
+          @if (
+            searchText() ||
+            selectedCategoryId() !== 0
+            ) {
+            <button
+              type="button"
+              (click)="clearFilters()"
+            >
+              Reset filters
+            </button>
+          }
+        </div>
+
+        @if (filteredProducts().length === 0) {
+          <div class="empty-state">
+            <span class="empty-state__icon">
+              ⌕
+            </span>
+
+            <h3>
+              No products found
+            </h3>
+
+            <p>
+              Try changing the search text or selected category.
+            </p>
+
+            <button
+              type="button"
+              (click)="clearFilters()"
+            >
+              Show all products
+            </button>
+          </div>
+        } @else {
+          <div class="product-grid">
+            @for (
+              product of filteredProducts();
+              track product.id
+              ) {
+              <app-product-card
+                [product]="product"
+              />
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+</section>
