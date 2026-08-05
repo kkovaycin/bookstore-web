@@ -72,7 +72,10 @@
 
   @if (loading()) {
   <app-loading />
-  } @else if (errorMessage()) {
+  } @else if (
+  errorMessage() &&
+  products().length === 0
+  ) {
   <app-error-message
     [message]="errorMessage()"
   />
@@ -82,7 +85,10 @@
       <div class="filter-panel__header">
         <div>
           <span>Filter products</span>
-          <h3>Categories</h3>
+
+          <h3>
+            Categories
+          </h3>
         </div>
 
         <button
@@ -111,13 +117,18 @@
         </strong>
       </label>
 
-      @for (category of categories(); track category.id) {
+      @for (
+      category of categories();
+      track category.id
+      ) {
       <label class="filter-option">
         <input
           type="radio"
           name="category"
           [value]="category.id"
-          [checked]="selectedCategoryId() === category.id"
+          [checked]="
+                selectedCategoryId() === category.id
+              "
           (change)="updateCategory($event)"
         />
 
@@ -126,13 +137,19 @@
             </span>
 
         <strong>
-          {{ getCategoryProductCount(category.id) }}
+          {{
+          getCategoryProductCount(
+          category.id
+          )
+          }}
         </strong>
       </label>
       }
 
       <div class="filter-panel__information">
-          <span class="filter-panel__information-icon">
+          <span
+            class="filter-panel__information-icon"
+          >
             i
           </span>
 
@@ -148,17 +165,26 @@
           @if (searchText()) {
           <span>
                 Search results for
+
                 <strong>
                   “{{ searchText() }}”
                 </strong>
               </span>
-          } @else if (selectedCategoryId() !== 0) {
+          } @else if (
+          selectedCategoryId() !== 0
+          ) {
           <span>
                 Showing products from the selected category
               </span>
           } @else {
           <span>
                 Showing all available products
+              </span>
+          }
+
+          @if (filtering()) {
+          <span>
+                Updating results...
               </span>
           }
         </div>
@@ -175,6 +201,12 @@
         </button>
         }
       </div>
+
+      @if (errorMessage()) {
+      <app-error-message
+        [message]="errorMessage()"
+      />
+      }
 
       @if (products().length === 0) {
       <div class="empty-state">
