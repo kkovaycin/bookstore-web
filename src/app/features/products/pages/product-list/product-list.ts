@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { forkJoin } from 'rxjs';
 
 import { ProductCard } from '../../components/product-card/product-card';
@@ -18,9 +18,11 @@ import { ErrorMessage } from '../../../../shared/components/error-message/error-
 })
 export class ProductList implements OnInit {
   private readonly productService = inject(ProductService);
+
   private readonly categoryService = inject(CategoryService);
 
   readonly products = signal<Product[]>([]);
+  readonly allProducts = signal<Product[]>([]);
   readonly categories = signal<Category[]>([]);
 
   readonly searchText = signal('');
@@ -29,41 +31,60 @@ export class ProductList implements OnInit {
   readonly loading = signal(true);
   readonly errorMessage = signal('');
 
-  readonly filteredProducts = computed(() => {
-    const searchValue = this.searchText().trim().toLocaleLowerCase('tr-TR');
-
-    const categoryId = this.selectedCategoryId();
-
-    return this.products().filter((product) => {
-      const matchesSearch =
-        searchValue.length === 0 ||
-        product.name.toLocaleLowerCase('tr-TR').includes(searchValue) ||
-        product.categoryName.toLocaleLowerCase('tr-TR').includes(searchValue) ||
-        product.explanation?.toLocaleLowerCase('tr-TR').includes(searchValue);
-
-      const matchesCategory = categoryId === 0 || product.categoryId === categoryId;
-
-      return matchesSearch && matchesCategory;
-    });
-  });
-
   ngOnInit(): void {
     this.loadPageData();
   }
 
   updateSearchText(event: Event): void {
     const input = event.target as HTMLInputElement;
+
     this.searchText.set(input.value);
+    this.searchProducts();
   }
 
   updateCategory(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.selectedCategoryId.set(Number(select.value));
+    const input = event.target as HTMLInputElement;
+
+    this.selectedCategoryId.set(Number(input.value));
+
+    this.searchProducts();
   }
 
   clearFilters(): void {
     this.searchText.set('');
     this.selectedCategoryId.set(0);
+    this.products.set(this.allProducts());
+    this.errorMessage.set('');
+  }
+
+  getCategoryProductCount(categoryId: number): number {
+    return this.allProducts().filter((product) => product.categoryId === categoryId).length;
+  }
+
+  private searchProducts(): void {
+    const categoryId = this.selectedCategoryId();
+
+    const categoryIds = categoryId === 0 ? [] : [categoryId];
+
+    if (!this.searchText().trim() && categoryIds.length === 0) {
+      this.products.set(this.allProducts());
+      return;
+    }
+
+    this.loading.set(true);
+    this.errorMessage.set('');
+
+    this.productService.searchProducts(this.searchText(), categoryIds).subscribe({
+      next: (products) => {
+        this.products.set(products);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.errorMessage.set('Products could not be filtered. Please try again.');
+
+        this.loading.set(false);
+      },
+    });
   }
 
   private loadPageData(): void {
@@ -76,10 +97,10 @@ export class ProductList implements OnInit {
     }).subscribe({
       next: ({ products, categories }) => {
         this.products.set(products);
+        this.allProducts.set(products);
         this.categories.set(categories);
         this.loading.set(false);
       },
-
       error: () => {
         this.errorMessage.set('Products could not be loaded. Please check the backend connection.');
 

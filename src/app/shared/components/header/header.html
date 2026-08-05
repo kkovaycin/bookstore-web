@@ -28,15 +28,47 @@
       >
         Categories
       </a>
+
+      @if (authService.isAdmin()) {
+      <a
+        routerLink="/admin"
+        routerLinkActive="active"
+      >
+        Admin
+      </a>
+      }
     </nav>
 
     <div class="header__actions">
+      @if (authService.isAuthenticated()) {
+      <div class="user-area">
+          <span class="username">
+            {{ authService.username() }}
+          </span>
+
+        <button
+          class="logout-button"
+          type="button"
+          (click)="logout()"
+        >
+          Logout
+        </button>
+      </div>
+      } @else {
       <a
         class="login-link"
-        routerLink="/auth/login"
+        routerLink="/login"
       >
         Login
       </a>
+
+      <a
+        class="register-link"
+        routerLink="/register"
+      >
+        Register
+      </a>
+      }
 
       <button
         class="cart-button"

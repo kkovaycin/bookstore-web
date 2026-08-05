@@ -1,0 +1,82 @@
+<section class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <p class="eyebrow">Welcome back</p>
+      <h1>Sign in</h1>
+      <p>Sign in to continue to Bookstore.</p>
+    </div>
+
+    <form
+      class="auth-form"
+      [formGroup]="loginForm"
+      (ngSubmit)="submit()"
+    >
+      <div class="form-field">
+        <label for="email">Email</label>
+
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="name@example.com"
+          autocomplete="email"
+        />
+
+        @if (
+        loginForm.controls.email.touched &&
+        loginForm.controls.email.hasError('required')
+        ) {
+        <small>Email is required.</small>
+        }
+
+        @if (
+        loginForm.controls.email.touched &&
+        loginForm.controls.email.hasError('email')
+        ) {
+        <small>Please enter a valid email address.</small>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="password">Password</label>
+
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="Enter your password"
+          autocomplete="current-password"
+        />
+
+        @if (
+        loginForm.controls.password.touched &&
+        loginForm.controls.password.hasError('required')
+        ) {
+        <small>Password is required.</small>
+        }
+      </div>
+
+      @if (errorMessage()) {
+      <p class="error-message">
+        {{ errorMessage() }}
+      </p>
+      }
+
+      <button
+        type="submit"
+        [disabled]="loading()"
+      >
+        @if (loading()) {
+        Signing in...
+        } @else {
+        Sign in
+        }
+      </button>
+    </form>
+
+    <p class="auth-footer">
+      Do not have an account?
+      <a routerLink="/register">Create account</a>
+    </p>
+  </div>
+</section>

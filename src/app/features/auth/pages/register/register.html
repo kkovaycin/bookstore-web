@@ -1,0 +1,183 @@
+<section class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <p class="eyebrow">Join Bookstore</p>
+      <h1>Create account</h1>
+      <p>Enter your information to create an account.</p>
+    </div>
+
+    <form
+      class="auth-form"
+      [formGroup]="registerForm"
+      (ngSubmit)="submit()"
+    >
+      <div class="name-fields">
+        <div class="form-field">
+          <label for="firstName">First name</label>
+
+          <input
+            id="firstName"
+            type="text"
+            formControlName="firstName"
+            placeholder="Kubra"
+            autocomplete="given-name"
+          />
+
+          @if (
+          registerForm.controls.firstName.touched &&
+          registerForm.controls.firstName.hasError('required')
+          ) {
+          <small>First name is required.</small>
+          }
+
+          @if (
+          registerForm.controls.firstName.touched &&
+          registerForm.controls.firstName.hasError('maxlength')
+          ) {
+          <small>First name cannot exceed 100 characters.</small>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="lastName">Last name</label>
+
+          <input
+            id="lastName"
+            type="text"
+            formControlName="lastName"
+            placeholder="Kovaycin"
+            autocomplete="family-name"
+          />
+
+          @if (
+          registerForm.controls.lastName.touched &&
+          registerForm.controls.lastName.hasError('required')
+          ) {
+          <small>Last name is required.</small>
+          }
+
+          @if (
+          registerForm.controls.lastName.touched &&
+          registerForm.controls.lastName.hasError('maxlength')
+          ) {
+          <small>Last name cannot exceed 100 characters.</small>
+          }
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="username">Username</label>
+
+        <input
+          id="username"
+          type="text"
+          formControlName="username"
+          placeholder="kubra"
+          autocomplete="username"
+        />
+
+        @if (
+        registerForm.controls.username.touched &&
+        registerForm.controls.username.hasError('required')
+        ) {
+        <small>Username is required.</small>
+        }
+
+        @if (
+        registerForm.controls.username.touched &&
+        registerForm.controls.username.hasError('minlength')
+        ) {
+        <small>Username must contain at least 3 characters.</small>
+        }
+
+        @if (
+        registerForm.controls.username.touched &&
+        registerForm.controls.username.hasError('maxlength')
+        ) {
+        <small>Username cannot exceed 100 characters.</small>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="email">Email</label>
+
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="name@example.com"
+          autocomplete="email"
+        />
+
+        @if (
+        registerForm.controls.email.touched &&
+        registerForm.controls.email.hasError('required')
+        ) {
+        <small>Email is required.</small>
+        }
+
+        @if (
+        registerForm.controls.email.touched &&
+        registerForm.controls.email.hasError('email')
+        ) {
+        <small>Please enter a valid email address.</small>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="password">Password</label>
+
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="At least 8 characters"
+          autocomplete="new-password"
+        />
+
+        @if (
+        registerForm.controls.password.touched &&
+        registerForm.controls.password.hasError('required')
+        ) {
+        <small>Password is required.</small>
+        }
+
+        @if (
+        registerForm.controls.password.touched &&
+        registerForm.controls.password.hasError('minlength')
+        ) {
+        <small>Password must contain at least 8 characters.</small>
+        }
+
+        @if (
+        registerForm.controls.password.touched &&
+        registerForm.controls.password.hasError('maxlength')
+        ) {
+        <small>Password cannot exceed 100 characters.</small>
+        }
+      </div>
+
+      @if (errorMessage()) {
+      <p class="error-message">
+        {{ errorMessage() }}
+      </p>
+      }
+
+      <button
+        type="submit"
+        [disabled]="loading()"
+      >
+        @if (loading()) {
+        Creating account...
+        } @else {
+        Create account
+        }
+      </button>
+    </form>
+
+    <p class="auth-footer">
+      Already have an account?
+      <a routerLink="/login">Sign in</a>
+    </p>
+  </div>
+</section>
