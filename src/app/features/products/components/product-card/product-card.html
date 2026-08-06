@@ -1,6 +1,17 @@
 <article class="product-card">
   <div class="product-card__image">
-    Book cover
+    @if (product().base64Image) {
+    <img
+      [src]="product().base64Image"
+      [alt]="product().name + ' cover'"
+    />
+    } @else {
+    <div class="product-card__placeholder">
+        <span>
+          Book cover
+        </span>
+    </div>
+    }
   </div>
 
   <div class="product-card__content">

@@ -1,0 +1,232 @@
+<section class="product-form-page">
+  <div class="product-form-page__header">
+    <div>
+      <span class="eyebrow">
+        Admin panel
+      </span>
+
+      <h1>
+        @if (isEditMode()) {
+        Edit product
+        } @else {
+        Add product
+        }
+      </h1>
+
+      <p>
+        Enter the product information and select a book cover.
+      </p>
+    </div>
+
+    <a routerLink="/products">
+      Back to products
+    </a>
+  </div>
+
+  @if (loading()) {
+  <div class="status-message">
+    Loading product form...
+  </div>
+  } @else {
+  <form
+    class="product-form"
+    [formGroup]="productForm"
+    (ngSubmit)="submit()"
+  >
+    <div class="product-form__fields">
+      <div class="form-field">
+        <label for="name">
+          Product name
+        </label>
+
+        <input
+          id="name"
+          type="text"
+          formControlName="name"
+          placeholder="Enter the book name"
+        />
+
+        @if (
+        productForm.controls.name.touched &&
+        productForm.controls.name.hasError('required')
+        ) {
+        <small>
+          Product name is required.
+        </small>
+        }
+
+        @if (
+        productForm.controls.name.touched &&
+        productForm.controls.name.hasError('maxlength')
+        ) {
+        <small>
+          Product name cannot exceed 200 characters.
+        </small>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="price">
+          Price
+        </label>
+
+        <input
+          id="price"
+          type="number"
+          min="0.01"
+          step="0.01"
+          formControlName="price"
+          placeholder="0.00"
+        />
+
+        @if (
+        productForm.controls.price.touched &&
+        productForm.controls.price.invalid
+        ) {
+        <small>
+          Price must be greater than zero.
+        </small>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="categoryId">
+          Category
+        </label>
+
+        <select
+          id="categoryId"
+          formControlName="categoryId"
+        >
+          <option value="0">
+            Select a category
+          </option>
+
+          @for (
+          category of categories();
+          track category.id
+          ) {
+          <option [value]="category.id">
+            {{ category.name }}
+          </option>
+          }
+        </select>
+
+        @if (
+        productForm.controls.categoryId.touched &&
+        productForm.controls.categoryId.invalid
+        ) {
+        <small>
+          Please select a category.
+        </small>
+        }
+      </div>
+
+      <div class="form-field form-field--full">
+        <label for="explanation">
+          Explanation
+        </label>
+
+        <textarea
+          id="explanation"
+          rows="7"
+          formControlName="explanation"
+          placeholder="Enter the product explanation"
+        ></textarea>
+
+        @if (
+        productForm.controls.explanation.touched &&
+        productForm.controls.explanation.hasError('maxlength')
+        ) {
+        <small>
+          Explanation cannot exceed 5000 characters.
+        </small>
+        }
+      </div>
+    </div>
+
+    <div class="image-panel">
+      <div class="image-panel__header">
+        <div>
+          <h2>
+            Product image
+          </h2>
+
+          <p>
+            Select a JPG, PNG or WebP image. Maximum size: 2 MB.
+          </p>
+        </div>
+      </div>
+
+      <label class="image-upload">
+        <input
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+          (change)="onImageSelected($event)"
+        />
+
+        <span>
+            Choose image
+          </span>
+      </label>
+
+      @if (imageErrorMessage()) {
+      <p class="image-error">
+        {{ imageErrorMessage() }}
+      </p>
+      }
+
+      <div class="image-preview">
+        @if (selectedImage()) {
+        <img
+          [src]="selectedImage()"
+          alt="Selected product preview"
+        />
+
+        <button
+          type="button"
+          (click)="removeImage()"
+        >
+          Remove image
+        </button>
+        } @else {
+        <div class="image-preview__placeholder">
+          <strong>
+            No image selected
+          </strong>
+
+          <span>
+                The default book cover placeholder will be displayed.
+              </span>
+        </div>
+        }
+      </div>
+    </div>
+
+    @if (errorMessage()) {
+    <p class="error-message">
+      {{ errorMessage() }}
+    </p>
+    }
+
+    <div class="product-form__actions">
+      <a routerLink="/products">
+        Cancel
+      </a>
+
+      <button
+        type="submit"
+        [disabled]="saving()"
+      >
+        @if (saving()) {
+        Saving product...
+        } @else if (isEditMode()) {
+        Update product
+        } @else {
+        Create product
+        }
+      </button>
+    </div>
+  </form>
+  }
+</section>
